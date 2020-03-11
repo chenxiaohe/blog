@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.river.blog.dao.CommentMapper">
+
+    <sql id="tableName">comment</sql>
+
+    <sql id="columns_no_id">
+        parent_id, article_id, username, email,
+        location, comment, status, create_date,
+        update_date
+    </sql>
+
+    <select id="queryByArticle" resultType="Comment">
+        SELECT * FROM
+        <include refid="tableName"/>
+        WHERE article_id = #{articleId} AND status = 1
+        ORDER BY update_date DESC
+    </select>
+
+    <insert id="insert" parameterType="Comment" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT IGNORE INTO
+        <include refid="tableName"/>
+        (<include refid="columns_no_id"/>)
+        VALUES
+        (
+        #{parentId}, #{articleId}, #{username}, #{email}, #{location}, #{comment},
+        #{status}, #{createDate}, #{updateDate}
+        )
+    </insert>
+
+    <update id="update" parameterType="Comment">
+        UPDATE
+        <include refid="tableName"/>
+        <set>
+            <if test="parentId not in {null, ''}">parent_id=#{parentId}</if>
+            <if test="articleId not in {null, ''}">article_id=#{articleId}</if>
+            <if test="username not in {null, ''}">username=#{username}</if>
+            <if test="email not in {null, ''}">email=#{email}</if>
+            <if test="location not in {null, ''}">location=#{location}</if>
+            <if test="comment not in {null, ''}">comment=#{comment}</if>
+            <if test="status not in {null, ''}">status=#{status}</if>
+            <if test="createDate not in {null, ''}">create_date=#{createDate}</if>
+            <if test="updateDate not in {null, ''}">update_date=#{updateDate}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+</mapper>

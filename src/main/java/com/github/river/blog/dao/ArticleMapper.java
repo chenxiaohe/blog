@@ -5,9 +5,16 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 @Repository
 public interface ArticleMapper {
-    List<Article> queryList();
+    List<Article> queryList(Integer type);
+
+    List<Article> detail(Long id);
+
+    int insert(Article article);
+
+    int update(Article article);
 }
